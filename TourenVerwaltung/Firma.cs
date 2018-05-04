@@ -16,5 +16,9 @@ namespace TourenVerwaltung
         public string Ort { get; set; }
         public string Land { get; set; }
 
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

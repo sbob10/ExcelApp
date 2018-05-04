@@ -21,8 +21,10 @@ namespace TourenVerwaltung
         public double Preis_Netto { get; set; }
         public double WarteZeit { get; set; }
         public double BeEntladezeit { get; set; }
-        public double Rückfracht { get; set; }
+        public string Rückfracht { get; set; }
         public double Maut { get; set; }
         public double GesamtNetto { get; set; }
+
+
     }
 }

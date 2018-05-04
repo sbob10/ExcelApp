@@ -126,19 +126,50 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="AddFahrerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AddFirmaWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditFahrerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditFirmaWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="AddFahrerWindow.xaml.cs">
+      <DependentUpon>AddFahrerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AddFirmaWindow.xaml.cs">
+      <DependentUpon>AddFirmaWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Constants.cs" />
+    <Compile Include="EditFahrerWindow.xaml.cs">
+      <DependentUpon>EditFahrerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditFirmaWindow.xaml.cs">
+      <DependentUpon>EditFirmaWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ExcelManager.cs" />
     <Compile Include="Fahrer.cs" />
+    <Compile Include="FahrerWindowsViewModel.cs" />
     <Compile Include="Firma.cs" />
+    <Compile Include="FirmaWindowsViewModel.cs" />
     <Compile Include="LUEntry.cs" />
+    <Compile Include="LUValidationRule.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

@@ -54,11 +54,98 @@ namespace TourenVerwaltung
                 temp.Preis_Netto = Leistungsuebersicht.GetCellValueAsDouble("I" + i.ToString());
                 temp.WarteZeit = Leistungsuebersicht.GetCellValueAsDouble("J" + i.ToString());
                 temp.BeEntladezeit = Leistungsuebersicht.GetCellValueAsDouble("K" + i.ToString());
-                temp.Rückfracht = Leistungsuebersicht.GetCellValueAsDouble("L" + i.ToString());
+                temp.Rückfracht = Leistungsuebersicht.GetCellValueAsString("L" + i.ToString());
                 temp.Maut = Leistungsuebersicht.GetCellValueAsDouble("M" + i.ToString());
                 temp.GesamtNetto = Leistungsuebersicht.GetCellValueAsDouble("N" + i.ToString());
 
                 if (string.IsNullOrEmpty(temp.Datum) || string.IsNullOrEmpty(temp.RechnNr)) 
+                {
+                    break;
+                }
+                else
+                {
+                    tempList.Add(temp);
+                }
+            }
+
+            return tempList;
+        }
+
+        public List<Fahrer> LoadCollectionFahrer()
+        {
+            try
+            {
+                Fahrer = new SLDocument("Fahrer.xlsx");
+            }
+            catch (System.IO.FileNotFoundException e)
+            {
+                Fahrer = new SLDocument();
+                Fahrer.SaveAs("Fahrer.xlsx");
+                Fahrer = new SLDocument("Fahrer.xlsx");
+            }
+            catch (System.IO.IOException f)
+            {
+                throw f;
+            }
+
+            List<Fahrer> tempList = new List<Fahrer>();
+
+            for (int i = 2; i < 102; i++)
+            {
+                Fahrer temp = new Fahrer();
+                temp.NameVorname = Fahrer.GetCellValueAsString("B" + i.ToString());
+                temp.DatumSeit = Fahrer.GetCellValueAsString("C" + i.ToString());
+                temp.DatumBis = Fahrer.GetCellValueAsString("D" + i.ToString());
+                temp.GebDatum = Fahrer.GetCellValueAsString("E" + i.ToString());
+                temp.StundenGesamt = Fahrer.GetCellValueAsDouble("F" + i.ToString());
+                temp.StundenAbgerechnet = Fahrer.GetCellValueAsDouble("G" + i.ToString());
+                temp.ÜberstundenVormonate = Fahrer.GetCellValueAsDouble("H" + i.ToString());
+                temp.ÜberstundenDifferenz = Fahrer.GetCellValueAsDouble("I" + i.ToString());
+               
+
+                if (string.IsNullOrEmpty(temp.NameVorname))
+                {
+                    break;
+                }
+                else
+                {
+                    tempList.Add(temp);
+                }
+            }
+
+            return tempList;
+        }
+
+        public List<Firma> LoadCollectionFirma()
+        {
+            try
+            {
+                Firmen = new SLDocument("Firmen.xlsx");
+            }
+            catch (System.IO.FileNotFoundException e)
+            {
+                Firmen = new SLDocument();
+                Firmen.SaveAs("Firmen.xlsx");
+                Firmen = new SLDocument("Firmen.xlsx");
+            }
+            catch (System.IO.IOException f)
+            {
+                throw f;
+            }
+
+            List<Firma> tempList = new List<Firma>();
+
+            for (int i = 2; i < 102; i++)
+            {
+                Firma temp = new Firma();
+                temp.Name = Firmen.GetCellValueAsString("B" + i.ToString());
+                temp.Ansprechpartner = Firmen.GetCellValueAsString("C" + i.ToString());
+                temp.StraßeUndNr = Firmen.GetCellValueAsString("D" + i.ToString());
+                temp.PLZ = Firmen.GetCellValueAsString("E" + i.ToString());
+                temp.Ort = Firmen.GetCellValueAsString("F" + i.ToString());
+                temp.Land = Firmen.GetCellValueAsString("G" + i.ToString());
+                     
+                if (string.IsNullOrEmpty(temp.Name))
                 {
                     break;
                 }
@@ -83,51 +170,157 @@ namespace TourenVerwaltung
 
             Leistungsuebersicht.SetCellValue("A1", "Leistungsübersicht WLG Transporte:  Aufträge - Fahrten 2018");
 
-            for (int x = 0; x < 100; x++)
+            // clear excel
+            for(int x = 0; x < 100; x++)
+            {
+                Leistungsuebersicht.SetCellValue("A" + i.ToString(), j);
+                Leistungsuebersicht.SetCellValue("B" + i.ToString(), "");
+                Leistungsuebersicht.SetCellValue("C" + i.ToString(), "");
+                Leistungsuebersicht.SetCellValue("D" + i.ToString(), "");
+                Leistungsuebersicht.SetCellValue("E" + i.ToString(), "");
+                Leistungsuebersicht.SetCellValue("F" + i.ToString(), "");
+                Leistungsuebersicht.SetCellValue("G" + i.ToString(), "");
+                Leistungsuebersicht.SetCellValue("H" + i.ToString(), "");
+                Leistungsuebersicht.SetCellValue("I" + i.ToString(), "");
+                Leistungsuebersicht.SetCellValue("J" + i.ToString(), "");
+                Leistungsuebersicht.SetCellValue("K" + i.ToString(), "");
+                Leistungsuebersicht.SetCellValue("L" + i.ToString(), "");
+                Leistungsuebersicht.SetCellValue("M" + i.ToString(), "");
+                Leistungsuebersicht.SetCellValue("N" + i.ToString(), "");
+
+                i++;j++;
+            }
+
+            i = 2; j = 1;
+
+            for (int x = 0; x < collection.Count; x++)
             {
                 if (x < collection.Count)
                 {
-                    Leistungsuebersicht.SetCellValue("A" + i.ToString(), collection.ElementAt(x).ID.ToString());
-                    Leistungsuebersicht.SetCellValue("B" + i.ToString(), collection.ElementAt(x).Datum.ToString());
-                    Leistungsuebersicht.SetCellValue("C" + i.ToString(), collection.ElementAt(x).RechnNr.ToString());
-                    Leistungsuebersicht.SetCellValue("D" + i.ToString(), collection.ElementAt(x).Auftragsgeber.ToString());
-                    Leistungsuebersicht.SetCellValue("E" + i.ToString(), collection.ElementAt(x).Autotyp.ToString());
-                    Leistungsuebersicht.SetCellValue("F" + i.ToString(), collection.ElementAt(x).Fahrer.ToString());
-                    Leistungsuebersicht.SetCellValue("G" + i.ToString(), collection.ElementAt(x).Beladeort.ToString());
-                    Leistungsuebersicht.SetCellValue("H" + i.ToString(), collection.ElementAt(x).Entladeort.ToString());
-                    Leistungsuebersicht.SetCellValue("I" + i.ToString(), collection.ElementAt(x).Preis_Netto.ToString());
-                    Leistungsuebersicht.SetCellValue("J" + i.ToString(), collection.ElementAt(x).WarteZeit.ToString());
-                    Leistungsuebersicht.SetCellValue("K" + i.ToString(), collection.ElementAt(x).BeEntladezeit.ToString());
-                    Leistungsuebersicht.SetCellValue("L" + i.ToString(), collection.ElementAt(x).Rückfracht.ToString());
-                    Leistungsuebersicht.SetCellValue("M" + i.ToString(), collection.ElementAt(x).Maut.ToString());
-                    Leistungsuebersicht.SetCellValue("N" + i.ToString(), collection.ElementAt(x).GesamtNetto.ToString());
+                    if(collection.ElementAt(x).ID == 0)
+                        Leistungsuebersicht.SetCellValue("A" + i.ToString(), j);
+                    else
+                        Leistungsuebersicht.SetCellValue("A" + i.ToString(), collection.ElementAt(x).ID);
+                    if(collection.ElementAt(x).Datum != null)
+                        Leistungsuebersicht.SetCellValue("B" + i.ToString(), collection.ElementAt(x).Datum.ToString());
+                    if (collection.ElementAt(x).RechnNr != null)
+                        Leistungsuebersicht.SetCellValue("C" + i.ToString(), collection.ElementAt(x).RechnNr.ToString());
+                    if (collection.ElementAt(x).Auftragsgeber != null)
+                        Leistungsuebersicht.SetCellValue("D" + i.ToString(), collection.ElementAt(x).Auftragsgeber.ToString());
+                    if (collection.ElementAt(x).Autotyp != null)
+                        Leistungsuebersicht.SetCellValue("E" + i.ToString(), collection.ElementAt(x).Autotyp.ToString());
+                    if (collection.ElementAt(x).Fahrer != null)
+                        Leistungsuebersicht.SetCellValue("F" + i.ToString(), collection.ElementAt(x).Fahrer.ToString());
+                    if (collection.ElementAt(x).Beladeort != null)
+                        Leistungsuebersicht.SetCellValue("G" + i.ToString(), collection.ElementAt(x).Beladeort.ToString());
+                    if (collection.ElementAt(x).Entladeort != null)                   
+                        Leistungsuebersicht.SetCellValue("H" + i.ToString(), collection.ElementAt(x).Entladeort.ToString());
+                    Leistungsuebersicht.SetCellValue("I" + i.ToString(), collection.ElementAt(x).Preis_Netto);
+                    Leistungsuebersicht.SetCellValue("J" + i.ToString(), collection.ElementAt(x).WarteZeit);
+                    Leistungsuebersicht.SetCellValue("K" + i.ToString(), collection.ElementAt(x).BeEntladezeit);
+                    if (collection.ElementAt(x).Rückfracht != null)
+                        Leistungsuebersicht.SetCellValue("L" + i.ToString(), collection.ElementAt(x).Rückfracht.ToString());
+                    Leistungsuebersicht.SetCellValue("M" + i.ToString(), collection.ElementAt(x).Maut);
+                    Leistungsuebersicht.SetCellValue("N" + i.ToString(), collection.ElementAt(x).GesamtNetto);
                 }
-                else
-                {
-                    Leistungsuebersicht.SetCellValue("A" + i.ToString(), j.ToString());
-                    Leistungsuebersicht.SetCellValue("B" + i.ToString(), "");
-                    Leistungsuebersicht.SetCellValue("C" + i.ToString(), "");
-                    Leistungsuebersicht.SetCellValue("D" + i.ToString(), "");
-                    Leistungsuebersicht.SetCellValue("E" + i.ToString(), "");
-                    Leistungsuebersicht.SetCellValue("F" + i.ToString(), "");
-                    Leistungsuebersicht.SetCellValue("G" + i.ToString(), "");
-                    Leistungsuebersicht.SetCellValue("H" + i.ToString(), "");
-                    Leistungsuebersicht.SetCellValue("I" + i.ToString(), "");
-                    Leistungsuebersicht.SetCellValue("J" + i.ToString(), "");
-                    Leistungsuebersicht.SetCellValue("K" + i.ToString(), "");
-                    Leistungsuebersicht.SetCellValue("L" + i.ToString(), "");
-                    Leistungsuebersicht.SetCellValue("M" + i.ToString(), "");
-                    Leistungsuebersicht.SetCellValue("N" + i.ToString(), "");
-                }
-
                 i++;
                 j++;
             }
+
             Leistungsuebersicht.Save();
             Leistungsuebersicht = new SLDocument("Leistungsübersicht.xlsx");
         }
 
-      
+        public void StoreCollectionFahrer(List<Fahrer> collection)
+        {
+            int i = 2, j = 1;
+
+            Fahrer.SetCellValue("A1", "Fahrer WLG Transporte:  Übersicht 2018");
+
+            // clear excel
+            for (int x = 0; x < 100; x++)
+            {
+                Fahrer.SetCellValue("A" + i.ToString(), j);
+                Fahrer.SetCellValue("B" + i.ToString(), "");
+                Fahrer.SetCellValue("C" + i.ToString(), "");
+                Fahrer.SetCellValue("D" + i.ToString(), "");
+                Fahrer.SetCellValue("E" + i.ToString(), "");
+                Fahrer.SetCellValue("F" + i.ToString(), "");
+                Fahrer.SetCellValue("G" + i.ToString(), "");
+
+                i++; j++;
+            }
+
+            i = 2; j = 1;
+
+            for (int x = 0; x < collection.Count; x++)
+            {
+                if (collection.ElementAt(x).NameVorname != null)
+                    Fahrer.SetCellValue("B" + i.ToString(), collection.ElementAt(x).NameVorname);                 
+                if (collection.ElementAt(x).DatumSeit != null)
+                    Fahrer.SetCellValue("C" + i.ToString(), collection.ElementAt(x).DatumSeit);
+                if (collection.ElementAt(x).DatumBis != null)
+                    Fahrer.SetCellValue("D" + i.ToString(), collection.ElementAt(x).DatumBis);
+                if (collection.ElementAt(x).GebDatum != null)
+                    Fahrer.SetCellValue("E" + i.ToString(), collection.ElementAt(x).GebDatum);
+                Fahrer.SetCellValue("F" + i.ToString(), collection.ElementAt(x).StundenGesamt);
+                Fahrer.SetCellValue("G" + i.ToString(), collection.ElementAt(x).StundenAbgerechnet);
+                Fahrer.SetCellValue("H" + i.ToString(), collection.ElementAt(x).ÜberstundenVormonate);
+                Fahrer.SetCellValue("I" + i.ToString(), collection.ElementAt(x).ÜberstundenDifferenz);
+
+                i++; j++;
+            }
+
+            Fahrer.Save();
+            Fahrer = new SLDocument("Fahrer.xlsx");
+        }
+
+        public void StoreCollectionFirma(List<Firma> collection)
+        {
+            int i = 2, j = 1;
+
+            Firmen.SetCellValue("A1", "Firmen WLG Transporte:  Übersicht 2018");
+
+            // clear excel
+            for (int x = 0; x < 100; x++)
+            {
+                Firmen.SetCellValue("A" + i.ToString(), j);
+                Firmen.SetCellValue("B" + i.ToString(), "");
+                Firmen.SetCellValue("C" + i.ToString(), "");
+                Firmen.SetCellValue("D" + i.ToString(), "");
+                Firmen.SetCellValue("E" + i.ToString(), "");
+                Firmen.SetCellValue("F" + i.ToString(), "");
+                Firmen.SetCellValue("G" + i.ToString(), "");
+                Firmen.SetCellValue("H" + i.ToString(), "");
+                Firmen.SetCellValue("I" + i.ToString(), "");
+
+                i++; j++;
+            }
+
+            i = 2; j = 1;
+
+            for (int x = 0; x < collection.Count; x++)
+            {
+                if (collection.ElementAt(x).Name != null)
+                    Firmen.SetCellValue("B" + i.ToString(), collection.ElementAt(x).Name);
+                if (collection.ElementAt(x).Ansprechpartner != null)
+                    Firmen.SetCellValue("C" + i.ToString(), collection.ElementAt(x).Ansprechpartner);
+                if (collection.ElementAt(x).StraßeUndNr != null)
+                    Firmen.SetCellValue("D" + i.ToString(), collection.ElementAt(x).StraßeUndNr);
+                if (collection.ElementAt(x).PLZ != null)
+                    Firmen.SetCellValue("E" + i.ToString(), collection.ElementAt(x).PLZ);
+                if (collection.ElementAt(x).PLZ != null)
+                    Firmen.SetCellValue("F" + i.ToString(), collection.ElementAt(x).Ort);
+                if (collection.ElementAt(x).PLZ != null)
+                    Firmen.SetCellValue("G" + i.ToString(), collection.ElementAt(x).Land);
+
+                i++; j++;
+            }
+
+            Firmen.Save();
+            Firmen = new SLDocument("Firmen.xlsx");
+
+        }
 
         #endregion Storing Methods
 
@@ -138,14 +331,14 @@ namespace TourenVerwaltung
             System.Diagnostics.Process.Start("Leistungsübersicht.xlsx");
         }
 
-        public void OpenExcelB()
+        public void CreateAndOpenRechnungFahrer(List<LUEntry> collection)
         {
-            System.Diagnostics.Process.Start("ExcelB.xlsx");
+
         }
 
-        public void OpenExcelC(String month)
+        public void CreateAndOpenRechnungFirma(List<LUEntry> collection)
         {
-            System.Diagnostics.Process.Start("ExcelC.xlsx");
+
         }
 
         #endregion Opening Methods

@@ -19,6 +19,10 @@ namespace TourenVerwaltung
         public double ÜberstundenVormonate { get; set; }
         public double ÜberstundenDifferenz { get; set; }
 
-    
+
+        public override string ToString()
+        {
+            return NameVorname;
+        }
     }
 }

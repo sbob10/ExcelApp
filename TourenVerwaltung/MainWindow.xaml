@@ -7,7 +7,7 @@
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Touren Verwaltung" Height="500" Width="1080">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:MessageBoxService />
@@ -17,95 +17,265 @@
         <local:MainViewModel />
     </Window.DataContext>
 
-    <Grid>
+    <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50*"></RowDefinition>
-            <RowDefinition Height="800*"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="700*"></RowDefinition>
         </Grid.RowDefinitions>
 
         <TabControl Margin="10" Grid.Row="1">
-            <TabItem Header="Leistungsübersicht" Style="{DynamicResource SimpleTabItem}">
+            <TabItem Header="Leistungsübersicht" >
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="20"/>
-                        <RowDefinition Height="500*"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="400*"/>
+                        <RowDefinition Height="80" />
                     </Grid.RowDefinitions>
-                    
-                    <DataGrid Margin="10,50,18,10" Grid.Row="1" CanUserResizeRows="False" CanUserAddRows="True" IsReadOnly="False" CanUserDeleteRows="True" AlternatingRowBackground="LightGray" ColumnWidth="200" AutoGenerateColumns="False" ItemsSource="{Binding LUCollection}">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="700*"></ColumnDefinition>
+                        <ColumnDefinition Width="80*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid Margin="10,10,0,0" BorderThickness="0" Grid.Row="1" CanUserResizeRows="False" CanUserAddRows="True" IsReadOnly="False" CanUserDeleteRows="True" AlternatingRowBackground="LightGray" AutoGenerateColumns="False" ItemsSource="{Binding LUCollection}">
+
+                        <DataGrid.Resources>
+                            <Style x:Key="errorStyle" TargetType="{x:Type TextBox}">
+                                <Setter Property="Padding" Value="-2"/>
+                                <Style.Triggers>
+                                    <Trigger Property="Validation.HasError" Value="True">
+                                        <Setter Property="Background" Value="Red"/>
+                                        <Setter Property="ToolTip" 
+                                    Value="{Binding RelativeSource={RelativeSource Self},
+                                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Resources>
+
+                        <DataGrid.RowValidationRules>
+                            <local:LUValidationRule ValidationStep="UpdatedValue"/>
+                        </DataGrid.RowValidationRules>
+
+                        <DataGrid.InputBindings>
+                            <KeyBinding Key="Return" Command="{Binding OnGridEditedCommand}" ></KeyBinding>
+                        </DataGrid.InputBindings>
+
+                        <DataGrid.RowValidationErrorTemplate>
+                            <ControlTemplate>
+                                <Grid Margin="0,-2,0,-2"
+                                    ToolTip="{Binding RelativeSource={RelativeSource
+                                    FindAncestor, AncestorType={x:Type DataGridRow}},
+                                        Path=(Validation.Errors)[0].ErrorContent}">
+                                    <Ellipse StrokeThickness="0" Fill="Red" 
+                                        Width="{TemplateBinding FontSize}" 
+                                            Height="{TemplateBinding FontSize}" />
+                                    <TextBlock Text="!" FontSize="{TemplateBinding FontSize}" 
+                                FontWeight="Bold" Foreground="White" 
+                                    HorizontalAlignment="Center"  />
+                                </Grid>
+                            </ControlTemplate>
+                        </DataGrid.RowValidationErrorTemplate>
 
                         <DataGrid.Columns>
                             <DataGridTextColumn 
                                 Header="Datum" 
-                                Width="80"
-                                Binding="{Binding Datum, UpdateSourceTrigger=PropertyChanged}"/>
+                                Width="80*"
+                                Binding="{Binding Datum, StringFormat=D ,UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Rechnungsnummer" 
-                                Width="120"
+                                Width="120*"
                                 Binding="{Binding RechnNr, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Auftragsgeber" 
-                                Width="120"
+                                Width="120*"
                                 Binding="{Binding Auftragsgeber, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Autotyp" 
-                                Width="80"
+                                Width="80*"
                                 Binding="{Binding Autotyp, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Fahrer" 
-                                Width="80"
+                                Width="80*"
                                 Binding="{Binding Fahrer, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Beladeort" 
-                                Width="120"
+                                Width="120*"
                                 Binding="{Binding Beladeort, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Entladeort" 
-                                Width="120"
+                                Width="120*"
                                 Binding="{Binding Entladeort, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Preis (Netto)" 
-                                Width="80"
-                                Binding="{Binding Preis_Netto, UpdateSourceTrigger=PropertyChanged}"/>
+                                Width="80*"
+                                Binding="{Binding Preis_Netto, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Wartezeit" 
-                                Width="80"
-                                Binding="{Binding Wartezeit, UpdateSourceTrigger=PropertyChanged}"/>
+                                Width="80*"
+                                Binding="{Binding WarteZeit, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Be-/Entladezeit" 
-                                Width="120"
-                                Binding="{Binding BeEntladezeit, UpdateSourceTrigger=PropertyChanged}"/>
+                                Width="120*"
+                                Binding="{Binding BeEntladezeit,  StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Rückfracht" 
-                                Width="80"
+                                Width="80*"
                                 Binding="{Binding Rückfracht, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Maut" 
-                                Width="80"
-                                Binding="{Binding Maut, UpdateSourceTrigger=PropertyChanged}"/>
-                            <DataGridTextColumn 
-                                Header="Gesamt (Netto)" 
-                                Width="120"
-                                Binding="{Binding GesamtNetto, UpdateSourceTrigger=PropertyChanged}"/>
+                                Width="80*"
+                                Binding="{Binding Maut,  StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataGrid.Columns>
-
                     </DataGrid>
 
+                    <DataGrid Margin="0,10,10,0" AlternatingRowBackground="LightGray" Grid.Row="1" BorderThickness="0" HeadersVisibility="Column"  IsReadOnly="True" CanUserResizeColumns="False" CanUserResizeRows="False" Grid.Column="1" Width="auto" Height="auto" ItemsSource="{Binding LUGesamtEntryCollection}"  AutoGenerateColumns="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Header="Gesamt (Netto)" 
+                                Width="*" 
+                                Binding="{Binding StringFormat='{}{0:C}'}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button Content="Excel exportieren" Command="{Binding ExportLUExcelCommand}" HorizontalAlignment="Right" Margin="0,10,10,0" Width="120" Grid.ColumnSpan="2" Height="20" VerticalAlignment="Top"/>
+                    <Label Content="Gesamt Netto:"  FontWeight="Bold" HorizontalAlignment="Left" Margin="21,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="94"/>
+                    <Label Content="Gesamt Brutto:" FontWeight="Bold" HorizontalAlignment="Left" Margin="21,36,0,0" Grid.Row="2" VerticalAlignment="Top" Width="94"/>
+                    <TextBlock HorizontalAlignment="Left"  Margin="125,15,0,0" Grid.Row="2" Text="{Binding GesamtNettoValue, StringFormat='{}{0:C}'}" VerticalAlignment="Top"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="125,41,0,0" Grid.Row="2" Text="{Binding GesamtBruttoValue, StringFormat='{}{0:C}'}" VerticalAlignment="Top"/>
+
                 </Grid>
             </TabItem>
-            <TabItem Header="ExcelB" Style="{DynamicResource SimpleTabItem}">
+            <TabItem Header="Fahrer" >
                 <Grid>
-                   
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="400*"/>
+                        <RowDefinition Height="80" />
+                    </Grid.RowDefinitions>
+
+                    <DataGrid Margin="10,10,10,0" BorderThickness="0" Grid.Row="1" CanUserResizeRows="False" IsReadOnly="True"  AlternatingRowBackground="LightGray" AutoGenerateColumns="False" ItemsSource="{Binding FahrerTabLUEntries}">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn 
+                                Header="Datum" 
+                                Width="80*"
+                                Binding="{Binding Datum, StringFormat=D ,UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Rechnungsnummer" 
+                                Width="120*"
+                                Binding="{Binding RechnNr, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Auftragsgeber" 
+                                Width="120*"
+                                Binding="{Binding Auftragsgeber, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Autotyp" 
+                                Width="80*"
+                                Binding="{Binding Autotyp, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Beladeort" 
+                                Width="120*"
+                                Binding="{Binding Beladeort, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Entladeort" 
+                                Width="120*"
+                                Binding="{Binding Entladeort, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Gesamt Netto" 
+                                Width="120*"
+                                Binding="{Binding GesamtNetto,StringFormat='{}{0:C}', UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label Content="Fahrer:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="48"/>
+                    <ComboBox HorizontalAlignment="Left" Margin="63,10,0,0" VerticalAlignment="Top" Width="120" SelectedItem="{Binding SelectedFahrer}"  ItemsSource="{Binding FahrerCollection}"/>
+                    <Button Content="Fahrer hinzufügen" Command="{Binding AddFahrerCommand}" HorizontalAlignment="Left" Margin="210,10,0,0" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Fahrer bearbeiten" Command="{Binding EditFahrerCommand}" HorizontalAlignment="Left" Margin="350,10,0,0" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Fahrer löschen" Command="{Binding DeleteFahrerCommand}" HorizontalAlignment="Left" Margin="490,10,0,0" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Excel Exportieren" Command="{Binding ExportFahrerExcelCommand}" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="120"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="ExcelC" Style="{DynamicResource SimpleTabItem}">
+            <TabItem Header="Firmen">
                 <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="400*"/>
+                        <RowDefinition Height="100" />
+                    </Grid.RowDefinitions>
+
+                    <DataGrid Margin="10,10,10,0" BorderThickness="0" Grid.Row="1" CanUserResizeRows="False" IsReadOnly="True"  AlternatingRowBackground="LightGray" AutoGenerateColumns="False" ItemsSource="{Binding FirmenTabLUEntries}">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn 
+                                Header="Datum" 
+                                Width="80*"
+                                Binding="{Binding Datum, StringFormat=D ,UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Rechnungsnummer" 
+                                Width="120*"
+                                Binding="{Binding RechnNr, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Autotyp" 
+                                Width="80*"
+                                Binding="{Binding Autotyp, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Beladeort" 
+                                Width="120*"
+                                Binding="{Binding Beladeort, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Entladeort" 
+                                Width="120*"
+                                Binding="{Binding Entladeort, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Gesamt Netto" 
+                                Width="120*"
+                                Binding="{Binding GesamtNetto, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Preis (Netto)" 
+                                Width="80*"
+                                Binding="{Binding Preis_Netto, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Wartezeit" 
+                                Width="80*"
+                                Binding="{Binding WarteZeit, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Be-/Entladezeit" 
+                                Width="120*"
+                                Binding="{Binding BeEntladezeit,  StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Rückfracht" 
+                                Width="80*"
+                                Binding="{Binding Rückfracht, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Maut" 
+                                Width="80*"
+                                Binding="{Binding Maut,  StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Maut" 
+                                Width="80*"
+                                Binding="{Binding Maut,  StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn 
+                                Header="Gesamt Netto" 
+                                Width="80*"
+                                Binding="{Binding GesamtNetto, StringFormat='{}{0:C}', UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Label Content="Firmen:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="48"/>
+                    <ComboBox HorizontalAlignment="Left" Margin="63,10,0,0" ItemsSource="{Binding FirmenCollection}" SelectedItem="{Binding SelectedFirma}" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Firma hinzufügen" Command="{Binding AddFirmaCommand}" HorizontalAlignment="Left" Margin="210,10,0,0" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Firma bearbeiten" Command="{Binding EditFirmaCommand}" HorizontalAlignment="Left" Margin="350,10,0,0" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Firma löschen" Command="{Binding DeleteFirmaCommand}" HorizontalAlignment="Left" Margin="490,10,0,0" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Excel Exportieren" Command="{Binding ExportFirmaExcelCommand}" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="120"/>
 
                 </Grid>
             </TabItem>
         </TabControl>
-        
-        <ComboBox HorizontalAlignment="Left" ItemsSource="{Binding MonthComboboxSource}" Margin="10,10,0,0" SelectedItem="{Binding SelectedMonth}" VerticalAlignment="Top" Width="120"/>
-   
+
+        <ComboBox HorizontalAlignment="Left" ItemsSource="{Binding MonthComboSource}" Margin="10,10,0,0" SelectedItem="{Binding SelectedMonth}" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Speichern" Command="{Binding SaveCollectionsCommand}" HorizontalAlignment="Right" Margin="0,10,10,5" Height="30" Width="120" FontWeight="Bold"/>
+
     </Grid>
 
 </Window>
