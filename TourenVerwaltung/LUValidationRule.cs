@@ -21,10 +21,7 @@ namespace TourenVerwaltung
                 return new ValidationResult(false, "Datum darf nicht leer sein!");
             }
 
-            if (string.IsNullOrEmpty(entry.RechnNr))
-            {
-                return new ValidationResult(false, "Rechnungsnummer darf nicht leer sein!");
-            }
+
            
            return ValidationResult.ValidResult;        
         }

@@ -130,6 +130,7 @@ namespace TourenVerwaltung
 
         public ICommand ExportLUExcelCommand { get; set; }
         public ICommand OnGridEditedCommand { get; set; }
+        public ICommand AddEmptyLUValueCommand {get; set;}
 
         public ICommand AddFahrerCommand { get; set; }
         public ICommand EditFahrerCommand { get; set; }
@@ -162,6 +163,7 @@ namespace TourenVerwaltung
 
             OnGridEditedCommand = new DelegateCommand(OnGridLUEditedForCommand);
             ExportLUExcelCommand = new DelegateCommand(ExportLUExcel);
+            AddEmptyLUValueCommand = new DelegateCommand(AddEmptyLUValue);
 
             AddFahrerCommand = new DelegateCommand(AddFahrer);
             EditFahrerCommand = new DelegateCommand(EditFahrer);
@@ -279,6 +281,15 @@ namespace TourenVerwaltung
             }
         }
 
+        public LUEntry ConfigureLUEntryNewItem()
+        {
+            LUEntry returnValue = new LUEntry();
+
+            returnValue.OnAuftragsgeberChanged = new Func<string, LUEntry, string>(LoadRechnungsnummerForLUEntry);
+
+            return returnValue;
+        }
+
         #endregion Public Methods
 
         #region Private Methods    
@@ -334,11 +345,58 @@ namespace TourenVerwaltung
 
             foreach (LUEntry entry in LUCollection.ToList())
             {
-                if (entry.Auftragsgeber.Equals(SelectedFirma.Name))
+                if (entry.Auftragsgeber != null && entry.Auftragsgeber.Equals(SelectedFirma.Name))
                     tempList.Add(entry);
             }
 
             FirmenTabLUEntries = new ObservableCollection<LUEntry>(tempList);
+        }
+
+        private String LoadRechnungsnummerForLUEntry(String firma, LUEntry changedItem)
+        {
+            foreach (Firma item in FirmenCollection)
+            {
+                if (item.Name.Equals(firma))
+                {
+                    Firma holderFirma = item;
+
+                    if (changedItem.RechnNr == 0)
+                    {
+
+                        if (holderFirma.CountForCurrentRechnungsNr == 0)
+                            holderFirma.CurrentRechnungsNr++;
+
+                        holderFirma.CountForCurrentRechnungsNr++;
+
+                        if(holderFirma.CountForCurrentRechnungsNr > 30)
+                        {
+                            holderFirma.CountForCurrentRechnungsNr = 0;
+                            holderFirma.CurrentRechnungsNr++;
+                        }
+
+                        LUEntry holder = changedItem;
+
+                        holder.RechnNr = item.CurrentRechnungsNr;
+
+                        LUCollection.Remove(changedItem);
+                        LUCollection.Add(holder);
+
+                        FirmenCollection.Remove(item);
+                        FirmenCollection.Add(holderFirma);
+
+                        return ""; //just pseudo
+                    }
+
+                }
+            }
+            return ""; //just pseudo
+        }
+
+        private void AddEmptyLUValue()
+        {
+            LUEntry newValue = new LUEntry();
+            newValue.OnAuftragsgeberChanged = new Func<string, LUEntry, string>(LoadRechnungsnummerForLUEntry);
+            LUCollection.Add(newValue);
         }
 
         #endregion Private Methods

@@ -12,8 +12,16 @@ namespace TourenVerwaltung
 
         public int ID { get; set; }
         public string Datum { get; set; }
-        public string RechnNr { get; set; }
-        public string Auftragsgeber { get; set; }
+        public int RechnNr { get; set; }
+
+        private String _Auftragsgeber;
+
+        public String Auftragsgeber
+        {
+            get { return _Auftragsgeber; }
+            set { SetProperty(ref _Auftragsgeber, value, () => Auftragsgeber); if (OnAuftragsgeberChanged != null) OnAuftragsgeberChanged.Invoke(value, this); }
+        }
+
         public string Autotyp { get; set; }
         public string Fahrer { get; set; }
         public string Beladeort { get; set; }
@@ -25,6 +33,7 @@ namespace TourenVerwaltung
         public double Maut { get; set; }
         public double GesamtNetto { get; set; }
 
+        public Func<String, LUEntry, String> OnAuftragsgeberChanged; 
 
     }
 }

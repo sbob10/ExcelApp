@@ -37,7 +37,7 @@
                         <ColumnDefinition Width="80*"/>
                     </Grid.ColumnDefinitions>
 
-                    <DataGrid Margin="10,10,0,0" BorderThickness="0" Grid.Row="1" CanUserResizeRows="False" CanUserAddRows="True" IsReadOnly="False" CanUserDeleteRows="True" AlternatingRowBackground="LightGray" AutoGenerateColumns="False" ItemsSource="{Binding LUCollection}">
+                    <DataGrid Margin="10,10,0,0" BorderThickness="0" Grid.Row="1" CanUserResizeRows="False" CanUserAddRows="False" IsReadOnly="False" CanUserDeleteRows="True" AlternatingRowBackground="LightGray" AutoGenerateColumns="False" ItemsSource="{Binding LUCollection}">
 
                         <DataGrid.Resources>
                             <Style x:Key="errorStyle" TargetType="{x:Type TextBox}">
@@ -142,6 +142,7 @@
                     <Label Content="Gesamt Brutto:" FontWeight="Bold" HorizontalAlignment="Left" Margin="21,36,0,0" Grid.Row="2" VerticalAlignment="Top" Width="94"/>
                     <TextBlock HorizontalAlignment="Left"  Margin="125,15,0,0" Grid.Row="2" Text="{Binding GesamtNettoValue, StringFormat='{}{0:C}'}" VerticalAlignment="Top"/>
                     <TextBlock HorizontalAlignment="Left" Margin="125,41,0,0" Grid.Row="2" Text="{Binding GesamtBruttoValue, StringFormat='{}{0:C}'}" VerticalAlignment="Top"/>
+                    <Button Content="Eintrag hinzufügen" Command="{Binding AddEmptyLUValueCommand}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120"/>
 
                 </Grid>
             </TabItem>
@@ -275,6 +276,7 @@
 
         <ComboBox HorizontalAlignment="Left" ItemsSource="{Binding MonthComboSource}" Margin="10,10,0,0" SelectedItem="{Binding SelectedMonth}" VerticalAlignment="Top" Width="120"/>
         <Button Content="Speichern" Command="{Binding SaveCollectionsCommand}" HorizontalAlignment="Right" Margin="0,10,10,5" Height="30" Width="120" FontWeight="Bold"/>
+        <ComboBox Margin="147,10,0,0" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120"/>
 
     </Grid>
 

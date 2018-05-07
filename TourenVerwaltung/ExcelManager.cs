@@ -45,7 +45,7 @@ namespace TourenVerwaltung
                 LUEntry temp = new LUEntry();
                 temp.ID = Leistungsuebersicht.GetCellValueAsInt32("A" + i.ToString());
                 temp.Datum = Leistungsuebersicht.GetCellValueAsString("B" + i.ToString());
-                temp.RechnNr = Leistungsuebersicht.GetCellValueAsString("C" + i.ToString());
+                temp.RechnNr = Leistungsuebersicht.GetCellValueAsInt32("C" + i.ToString());
                 temp.Auftragsgeber = Leistungsuebersicht.GetCellValueAsString("D" + i.ToString());
                 temp.Autotyp = Leistungsuebersicht.GetCellValueAsString("E" + i.ToString());
                 temp.Fahrer = Leistungsuebersicht.GetCellValueAsString("F" + i.ToString());
@@ -58,7 +58,7 @@ namespace TourenVerwaltung
                 temp.Maut = Leistungsuebersicht.GetCellValueAsDouble("M" + i.ToString());
                 temp.GesamtNetto = Leistungsuebersicht.GetCellValueAsDouble("N" + i.ToString());
 
-                if (string.IsNullOrEmpty(temp.Datum) || string.IsNullOrEmpty(temp.RechnNr)) 
+                if (string.IsNullOrEmpty(temp.Datum)) 
                 {
                     break;
                 }
@@ -144,6 +144,8 @@ namespace TourenVerwaltung
                 temp.PLZ = Firmen.GetCellValueAsString("E" + i.ToString());
                 temp.Ort = Firmen.GetCellValueAsString("F" + i.ToString());
                 temp.Land = Firmen.GetCellValueAsString("G" + i.ToString());
+                temp.CurrentRechnungsNr = Firmen.GetCellValueAsInt32("H" + i.ToString());
+                temp.CountForCurrentRechnungsNr = Firmen.GetCellValueAsInt32("I" + ToString());
                      
                 if (string.IsNullOrEmpty(temp.Name))
                 {
@@ -203,8 +205,7 @@ namespace TourenVerwaltung
                         Leistungsuebersicht.SetCellValue("A" + i.ToString(), collection.ElementAt(x).ID);
                     if(collection.ElementAt(x).Datum != null)
                         Leistungsuebersicht.SetCellValue("B" + i.ToString(), collection.ElementAt(x).Datum.ToString());
-                    if (collection.ElementAt(x).RechnNr != null)
-                        Leistungsuebersicht.SetCellValue("C" + i.ToString(), collection.ElementAt(x).RechnNr.ToString());
+                    Leistungsuebersicht.SetCellValue("C" + i.ToString(), collection.ElementAt(x).RechnNr);
                     if (collection.ElementAt(x).Auftragsgeber != null)
                         Leistungsuebersicht.SetCellValue("D" + i.ToString(), collection.ElementAt(x).Auftragsgeber.ToString());
                     if (collection.ElementAt(x).Autotyp != null)
@@ -222,6 +223,7 @@ namespace TourenVerwaltung
                         Leistungsuebersicht.SetCellValue("L" + i.ToString(), collection.ElementAt(x).Rückfracht.ToString());
                     Leistungsuebersicht.SetCellValue("M" + i.ToString(), collection.ElementAt(x).Maut);
                     Leistungsuebersicht.SetCellValue("N" + i.ToString(), collection.ElementAt(x).GesamtNetto);
+
                 }
                 i++;
                 j++;
@@ -293,6 +295,8 @@ namespace TourenVerwaltung
                 Firmen.SetCellValue("G" + i.ToString(), "");
                 Firmen.SetCellValue("H" + i.ToString(), "");
                 Firmen.SetCellValue("I" + i.ToString(), "");
+                Firmen.SetCellValue("J" + i.ToString(), "");
+
 
                 i++; j++;
             }
@@ -313,6 +317,8 @@ namespace TourenVerwaltung
                     Firmen.SetCellValue("F" + i.ToString(), collection.ElementAt(x).Ort);
                 if (collection.ElementAt(x).PLZ != null)
                     Firmen.SetCellValue("G" + i.ToString(), collection.ElementAt(x).Land);
+                Firmen.SetCellValue("H" + i.ToString(), collection.ElementAt(x).CurrentRechnungsNr);
+                Firmen.SetCellValue("I" + i.ToString(), collection.ElementAt(x).CountForCurrentRechnungsNr);
 
                 i++; j++;
             }

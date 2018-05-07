@@ -35,6 +35,9 @@
         <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding AddFirmaValue.Land}"  VerticalAlignment="Top" Width="120" Margin="378,123,0,0"/>
         <Button Content="Hinzufügen" Command="{Binding AddFirmaCommand}" Margin="0,0,43,22" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="100" Grid.RowSpan="2" />
         <Button Content="Abbrechen" Command="{Binding CloseDialogAddFirmaCommand}" Margin="0,0,180,22" Height="22" VerticalAlignment="Bottom" Grid.RowSpan="2" HorizontalAlignment="Right" Width="100"/>
+        <Label Content="Anfangsrechnungsnummer:" HorizontalAlignment="Left" Margin="304,180,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="378,211,0,0" TextWrapping="Wrap" Text="{Binding AddFirmaValue.CurrentRechnungsNr}" VerticalAlignment="Top" Width="120"/>
+        
 
     </Grid>
 </Window>
