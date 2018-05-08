@@ -13,6 +13,7 @@ namespace TourenVerwaltung
         #region Data
         private SLDocument Leistungsuebersicht;
         private SLDocument Firmen;
+        private SLDocument FirmenPreise;
         private SLDocument Fahrer;
         #endregion Data
 
@@ -160,6 +161,46 @@ namespace TourenVerwaltung
             return tempList;
         }
 
+        public Dictionary<String, List<TourPreis>> LoadHashMapFirmenPreise()
+        {
+            try
+            {
+                FirmenPreise = new SLDocument("FirmenPreise.xlsx");
+            }
+            catch (System.IO.FileNotFoundException e)
+            {
+                FirmenPreise = new SLDocument();
+                FirmenPreise.SaveAs("FirmenPreise.xlsx");
+                FirmenPreise = new SLDocument("FirmenPreise.xlsx");
+            }
+            catch (System.IO.IOException f)
+            {
+                throw f;
+            }
+
+            Dictionary<String, List<TourPreis>> tempHashMap = new Dictionary<String, List<TourPreis>>();
+
+            for (int i = 2; i < 202; i++)
+            {               
+                String key = FirmenPreise.GetCellValueAsString("B" + i.ToString());
+
+                if (string.IsNullOrEmpty(key))
+                    continue;
+
+                if (!tempHashMap.Keys.Contains(key))
+                    tempHashMap.Add(key, new List<TourPreis>());
+                TourPreis tempItem = new TourPreis(FirmenPreise.GetCellValueAsString("C" + i.ToString()));
+                tempItem.Kilometer = FirmenPreise.GetCellValueAsDouble("D" + i.ToString());
+                tempItem.AutoTyp1 = FirmenPreise.GetCellValueAsDouble("E" + i.ToString());
+                tempItem.AutoTyp2 = FirmenPreise.GetCellValueAsDouble("F" + i.ToString());
+                tempItem.AutoTyp3 = FirmenPreise.GetCellValueAsDouble("G" + i.ToString());
+
+                tempHashMap[key].Add(tempItem);
+            }
+
+            return tempHashMap;
+        }
+
         #endregion Loading Methods
 
         #region Storing Methods
@@ -301,7 +342,7 @@ namespace TourenVerwaltung
                 i++; j++;
             }
 
-            i = 2; j = 1;
+            i = 2; 
 
             for (int x = 0; x < collection.Count; x++)
             {
@@ -320,11 +361,55 @@ namespace TourenVerwaltung
                 Firmen.SetCellValue("H" + i.ToString(), collection.ElementAt(x).CurrentRechnungsNr);
                 Firmen.SetCellValue("I" + i.ToString(), collection.ElementAt(x).CountForCurrentRechnungsNr);
 
-                i++; j++;
+                i++; 
             }
+
+
 
             Firmen.Save();
             Firmen = new SLDocument("Firmen.xlsx");
+
+        }
+
+        public void StoreHashMapFirmenPreise(Dictionary<String, List<TourPreis>> hashMap)
+        {
+            int i = 2, j = 1;
+
+            Firmen.SetCellValue("A1", "Tourpreise WLG Transporte:  Übersicht 2018");
+
+            // clear excel
+            for (int x = 0; x < 200; x++)
+            {
+                Firmen.SetCellValue("A" + i.ToString(), j);
+                Firmen.SetCellValue("B" + i.ToString(), "");
+                Firmen.SetCellValue("C" + i.ToString(), "");
+                Firmen.SetCellValue("D" + i.ToString(), "");
+                Firmen.SetCellValue("E" + i.ToString(), "");
+                Firmen.SetCellValue("F" + i.ToString(), "");
+                Firmen.SetCellValue("G" + i.ToString(), "");
+
+                i++; j++;
+            }
+
+            i = 2; 
+
+
+            foreach(String item in hashMap.Keys)
+            {
+                foreach(TourPreis tp in hashMap[item])
+                {
+                    FirmenPreise.SetCellValue("B" + i.ToString(), item);
+                    FirmenPreise.SetCellValue("C" + i.ToString(), tp.Tour);
+                    FirmenPreise.SetCellValue("D" + i.ToString(), tp.Kilometer);
+                    FirmenPreise.SetCellValue("E" + i.ToString(), tp.AutoTyp1);
+                    FirmenPreise.SetCellValue("F" + i.ToString(), tp.AutoTyp2);
+                    FirmenPreise.SetCellValue("G" + i.ToString(), tp.AutoTyp3);
+                    i++;
+                }
+            }
+
+            FirmenPreise.Save();
+            FirmenPreise = new SLDocument("FirmenPreise.xlsx");
 
         }
 

@@ -19,13 +19,40 @@ namespace TourenVerwaltung
         public String Auftragsgeber
         {
             get { return _Auftragsgeber; }
-            set { SetProperty(ref _Auftragsgeber, value, () => Auftragsgeber); if (OnAuftragsgeberChanged != null) OnAuftragsgeberChanged.Invoke(value, this); }
+            set
+            {
+                SetProperty(ref _Auftragsgeber, value, () => Auftragsgeber);
+                if (OnAuftragsgeberChanged != null)
+                    OnAuftragsgeberChanged.Invoke(value, this);            
+            }
         }
 
         public string Autotyp { get; set; }
         public string Fahrer { get; set; }
-        public string Beladeort { get; set; }
-        public string Entladeort { get; set; }
+
+
+        private String _Beladeort;
+
+        public String Beladeort
+        {
+            get { return _Beladeort; }
+            set
+            {
+                SetProperty(ref _Beladeort, value, () => Beladeort);               
+            }
+        }
+
+        private String _Entladeort;
+
+        public String Entladeort
+        {
+            get { return _Entladeort; }
+            set
+            {
+                SetProperty(ref _Entladeort, value, () => Entladeort);               
+            }
+        }
+
         public double Preis_Netto { get; set; }
         public double WarteZeit { get; set; }
         public double BeEntladezeit { get; set; }
@@ -33,7 +60,7 @@ namespace TourenVerwaltung
         public double Maut { get; set; }
         public double GesamtNetto { get; set; }
 
-        public Func<String, LUEntry, String> OnAuftragsgeberChanged; 
+        public Func<String, LUEntry, String> OnAuftragsgeberChanged;
 
     }
 }
