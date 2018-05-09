@@ -7,6 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
+// https://stackoverflow.com/questions/320089/how-do-i-bind-a-wpf-datagrid-to-a-variable-number-of-columns
+// https://blogs.msmvps.com/deborahk/populating-a-datagrid-with-dynamic-columns-in-a-silverlight-application-using-mvvm/
+
 namespace TourenVerwaltung
 {
     public class MainViewModel : ViewModelBase
@@ -43,7 +46,7 @@ namespace TourenVerwaltung
         public ObservableCollection<LUEntry> LUCollection
         {
             get { return _LUCollection; }
-            set { SetProperty(ref _LUCollection, value, () => LUCollection); LoadLUGesamtEntries(); LoadLUGesamtValues(); }
+            set { SetProperty(ref _LUCollection, value, () => LUCollection);}
         }
 
         private ObservableCollection<Fahrer> _FahrerCollection;
@@ -77,15 +80,7 @@ namespace TourenVerwaltung
             get { return _FirmenTabLUEntries; }
             set { SetProperty(ref _FirmenTabLUEntries, value, () => FirmenTabLUEntries); }
         }
-
-        private ObservableCollection<Double> _LUGesamtEntryCollection;
-
-        public ObservableCollection<Double> LUGesamtEntryCollection
-        {
-            get { return _LUGesamtEntryCollection; }
-            set { SetProperty(ref _LUGesamtEntryCollection, value, () => LUGesamtEntryCollection); }
-        }
-
+    
         private ObservableCollection<TourPreis> _CurrentTourPreisCollection;
 
         public ObservableCollection<TourPreis> CurrentTourPreisCollection
@@ -118,6 +113,13 @@ namespace TourenVerwaltung
             set { StoreAllCollections(); SetProperty(ref _SelectedMonth, value, () => SelectedMonth); LoadAllCollections(); }
         }
 
+        private String _SelectedYear;
+
+        public String SelectedYear
+        {
+            get { return _SelectedYear; }
+            set { SetProperty(ref _SelectedYear, value, () => SelectedYear); }
+        }
 
         private ObservableCollection<String> _MonthComboSource;
 
@@ -125,6 +127,14 @@ namespace TourenVerwaltung
         {
             get { return _MonthComboSource; }
             set { SetProperty(ref _MonthComboSource, value, () => MonthComboSource); }
+        }
+
+        private ObservableCollection<String> _YearsComboSource;
+
+        public ObservableCollection<String> YearsComboSource
+        {
+            get { return _YearsComboSource; }
+            set { SetProperty(ref _YearsComboSource, value, () => YearsComboSource); }
         }
 
         #endregion Properties
@@ -188,7 +198,7 @@ namespace TourenVerwaltung
             OnGridEditedCommand = new DelegateCommand(OnGridLUEditedForCommand);
             ExportLUExcelCommand = new DelegateCommand(ExportLUExcel);
             AddEmptyLUValueCommand = new DelegateCommand(AddEmptyLUValue);
-            SyncFirmenPreiseIntoLUEntriesCommand = new DelegateCommand(LoadLUEntriesForAllFirmenPreise);
+            SyncFirmenPreiseIntoLUEntriesCommand = new DelegateCommand(SyncFirmenPreiseIntoLUEntries);
 
             AddFahrerCommand = new DelegateCommand(AddFahrer);
             EditFahrerCommand = new DelegateCommand(EditFahrer);
@@ -201,7 +211,7 @@ namespace TourenVerwaltung
             ExportFirmaExcelCommand = new DelegateCommand(ExportFirmaExcel);
 
             ExportFirmenPreiseExcelCommand = new DelegateCommand(ExportFirmenPreiseExcel);
-            SyncLUEntriesIntoFirmenPreiseCommand = new DelegateCommand(LoadFirmenPreisForAllLUEntries);
+            SyncLUEntriesIntoFirmenPreiseCommand = new DelegateCommand(SyncLUEntriesIntoFirmenPreise);
         }
 
         private void InitValuesAndCollections()
@@ -209,7 +219,9 @@ namespace TourenVerwaltung
             // IMPOTANT: The order of these is essential as the last attributes are calling command on set()
 
             MonthComboSource = new ObservableCollection<String>(Constants.Months);
+            YearsComboSource = new ObservableCollection<String>(Constants.Years);
             SelectedMonth = Constants.getCurrentDateMonth();
+            SelectedYear = Constants.getCurrentDateYear();
 
             LUCollection = new ObservableCollection<LUEntry>(new List<LUEntry>());
             LUCollection.CollectionChanged += OnGridLUEdited;
@@ -219,6 +231,8 @@ namespace TourenVerwaltung
             CurrentTourPreisCollection = new ObservableCollection<TourPreis>(new List<TourPreis>());
 
             LoadAllCollections();
+            //LoadLUEntriesForAllFirmenPreise();
+            //LoadFirmenPreisForAllLUEntries();
         }
 
         #endregion Initialisations
@@ -332,29 +346,6 @@ namespace TourenVerwaltung
 
         // Load-And-Store-Methods
 
-        private void LoadLUGesamtEntries()
-        {
-            List<Double> tempList = new List<Double>();
-            foreach(LUEntry item in _LUCollection)
-            {
-                Double tempValue = item.Preis_Netto + item.Maut + item.WarteZeit;
-                item.GesamtNetto = tempValue;
-                tempList.Add(tempValue);
-            }
-            LUGesamtEntryCollection = new ObservableCollection<double>(tempList);
-        }
-
-        private void LoadLUGesamtValues()
-        {
-            double tempValue = 0;
-            foreach(double item in LUGesamtEntryCollection.ToList())
-            {
-                tempValue += item;
-            }
-            GesamtNettoValue = tempValue;
-            GesamtBruttoValue = tempValue * 1.19;
-        }
-
         private void LoadFahrerLUEntries()
         {
             if (SelectedFahrer == null)
@@ -450,6 +441,102 @@ namespace TourenVerwaltung
             }
         }
 
+        private void LoadFirmenPreisForAllLUEntries()
+        {
+            if (LUCollection == null)
+                return;
+
+            Dictionary<String, List<TourPreis>> tempHashMap = _FirmenPreiseHashMap;
+
+            foreach (LUEntry item in LUCollection)
+            {
+                String tourname = item.Beladeort + " - " + item.Entladeort;
+                bool contains = false;
+
+                foreach (var firma in FirmenCollection.ToList())
+                {
+                    if (item.Auftragsgeber != null && firma.Name.Equals(item.Auftragsgeber))
+                        contains = true;
+                }
+
+                if (!contains)
+                    continue;
+
+                if (!tempHashMap.Keys.Contains(item.Auftragsgeber))
+                    tempHashMap.Add(item.Auftragsgeber, new List<TourPreis>());
+
+                contains = false;
+
+                foreach (var item1 in tempHashMap[item.Auftragsgeber])
+                {
+                    if (item1.Tour.Equals(tourname))
+                        contains = true;
+                }
+
+                if (!contains)
+                    tempHashMap[item.Auftragsgeber].Add(new TourPreis(tourname));
+            }
+
+            _FirmenPreiseHashMap = tempHashMap;
+            LoadTourPreisCollection();
+        }
+
+        private void LoadLUEntriesForAllFirmenPreise()
+        {
+            List<LUEntry> tempList = new List<LUEntry>();
+            foreach (String key in _FirmenPreiseHashMap.Keys)
+            {
+                foreach (LUEntry entry in LUCollection.ToList())
+                {
+                    bool added = false;
+                    foreach (TourPreis tp in _FirmenPreiseHashMap[key])
+                    {
+                        if (entry.Auftragsgeber.Equals(key) && tp.Tour.Equals(entry.Beladeort + " - " + entry.Entladeort))
+                        {
+                            switch (entry.Autotyp)
+                            {
+                                case Autotyp.Bus:
+                                    if (tp.Kilometer == 0)
+                                        entry.Preis_Netto = tp.Bus;
+                                    else
+                                        entry.Preis_Netto = tp.Bus * tp.Kilometer;
+                                    break;
+                                case Autotyp.PKW:
+                                    if (tp.Kilometer == 0)
+                                        entry.Preis_Netto = tp.PKW;
+                                    else
+                                        entry.Preis_Netto = tp.PKW * tp.Kilometer;
+                                    break;
+                                case Autotyp.Caddy:
+                                    if (tp.Kilometer == 0)
+                                        entry.Preis_Netto = tp.Caddy;
+                                    else
+                                        entry.Preis_Netto = tp.Caddy * tp.Kilometer;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            // calculate Gesamt (Netto)
+                            entry.GesamtNetto = entry.Preis_Netto + entry.Rückfracht + entry.WarteZeit + entry.BeEntladezeit;
+
+                            tempList.Add(entry);
+                            added = true;
+                            break;
+                        }
+                    }
+
+                    // calculate Gesamt (Netto)
+                    entry.GesamtNetto = entry.Preis_Netto + entry.Rückfracht + entry.WarteZeit + entry.BeEntladezeit;
+
+                    if (!added)
+                        tempList.Add(entry);
+                }
+            }
+
+            LUCollection = new ObservableCollection<LUEntry>(tempList);
+        }
+
+
         #endregion Private Methods
 
         #region Command Methods
@@ -498,95 +585,14 @@ namespace TourenVerwaltung
 
         // Sync-Commands
 
-
-        private void LoadFirmenPreisForAllLUEntries()
+        private void SyncFirmenPreiseIntoLUEntries()
         {
-            if (LUCollection == null)
-                return;
-
-            Dictionary<String, List<TourPreis>> tempHashMap = new Dictionary<String, List<TourPreis>>();
-
-            foreach ( LUEntry item in LUCollection)
-            {
-                String tourname = item.Beladeort + " - " + item.Entladeort;
-                bool contains = false;
-
-                foreach (var firma in FirmenCollection.ToList())
-                {
-                    if (item.Auftragsgeber != null && firma.Name.Equals(item.Auftragsgeber))
-                        contains = true;
-                }
-
-                if (!contains)
-                    continue;
-
-                if (!tempHashMap.Keys.Contains(item.Auftragsgeber))
-                    tempHashMap.Add(item.Auftragsgeber, new List<TourPreis>());
-
-                contains = false;
-         
-                foreach (var item1 in tempHashMap[item.Auftragsgeber])
-                {
-                    if (item1.Tour.Equals(tourname))
-                        contains = true;
-                }
-
-                if (!contains)
-                    tempHashMap[item.Auftragsgeber].Add(new TourPreis(tourname));
-            }
-
-            _FirmenPreiseHashMap = tempHashMap;
-            LoadTourPreisCollection();
+            LoadLUEntriesForAllFirmenPreise();
         }
 
-        private void LoadLUEntriesForAllFirmenPreise()
+        private void SyncLUEntriesIntoFirmenPreise()
         {
-            List<LUEntry> tempList = new List<LUEntry>();
-            foreach (String key in _FirmenPreiseHashMap.Keys)
-            {
-                foreach (LUEntry entry in LUCollection.ToList())
-                {
-                    bool added = false;
-                    foreach (TourPreis tp in _FirmenPreiseHashMap[key])
-                    {
-                        if (entry.Auftragsgeber.Equals(key) && tp.Tour.Equals(entry.Beladeort + " - " + entry.Entladeort))
-                        {
-                            switch (entry.Autotyp)
-                            {
-                                case "AutoTyp1":
-                                    if (tp.Kilometer == 0)
-                                        entry.Preis_Netto = tp.AutoTyp1;
-                                    else
-                                        entry.Preis_Netto = tp.AutoTyp1 * tp.Kilometer;
-                                    break;
-                                case "AutoTyp2":
-                                    if (tp.Kilometer == 0)
-                                        entry.Preis_Netto = tp.AutoTyp2;
-                                    else
-                                        entry.Preis_Netto = tp.AutoTyp2 * tp.Kilometer;
-                                    break;
-                                case "AutoTyp3":
-                                    if (tp.Kilometer == 0)
-                                        entry.Preis_Netto = tp.AutoTyp3;
-                                    else
-                                        entry.Preis_Netto = tp.AutoTyp3 * tp.Kilometer;
-                                    break;
-                                default:
-                                    break;
-                            }
-                            tempList.Add(entry);
-                            added = true;
-                            break;
-                        }                      
-                    }
-
-                    if (!added)
-                        tempList.Add(entry);
-                }
-            }
-
-            LUCollection = new ObservableCollection<LUEntry>(tempList);
-            LoadLUGesamtEntries();
+            LoadFirmenPreisForAllLUEntries();
         }
 
 
@@ -630,16 +636,12 @@ namespace TourenVerwaltung
 
         public void OnGridLUEdited(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            LoadLUGesamtEntries();
-            LoadLUGesamtValues();
             LoadFahrerLUEntries();
             LoadFirmaLUEntries();
         }
 
         public void OnGridLUEditedForCommand()
         {
-            LoadLUGesamtEntries();
-            LoadLUGesamtValues();
             LoadFahrerLUEntries();
             LoadFirmaLUEntries();
         }

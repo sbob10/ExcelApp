@@ -12,7 +12,8 @@
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:MessageBoxService />
     </dxmvvm:Interaction.Behaviors>
-
+    
+ 
     <Window.DataContext>
         <local:MainViewModel />
     </Window.DataContext>
@@ -51,6 +52,7 @@
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
+
                         </DataGrid.Resources>
 
                         <DataGrid.RowValidationRules>
@@ -90,10 +92,11 @@
                                 Header="Auftragsgeber" 
                                 Width="120*"
                                 Binding="{Binding Auftragsgeber, UpdateSourceTrigger=PropertyChanged}"/>
-                            <DataGridTextColumn 
+                            <DataGridComboBoxColumn 
                                 Header="Autotyp" 
                                 Width="80*"
-                                Binding="{Binding Autotyp, UpdateSourceTrigger=PropertyChanged}"/>
+                                ItemsSource="{local:EnumValues local:Autotyp}"
+                                SelectedItemBinding ="{Binding Autotyp, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Fahrer" 
                                 Width="80*"
@@ -122,22 +125,18 @@
                             <DataGridTextColumn 
                                 Header="Rückfracht" 
                                 Width="80*"
-                                Binding="{Binding Rückfracht, UpdateSourceTrigger=PropertyChanged}"/>
+                                Binding="{Binding Rückfracht, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Maut" 
                                 Width="80*"
                                 Binding="{Binding Maut,  StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn
+                                Header ="Gesamt (Netto)"
+                                Width="90*"
+                                Binding="{Binding GesamtNetto, StringFormat=N2, UpdateSourceTrigger=PropertyChanged }"/>
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <DataGrid Margin="0,10,10,0" AlternatingRowBackground="LightGray" Grid.Row="1" BorderThickness="0" HeadersVisibility="Column"  IsReadOnly="True" CanUserResizeColumns="False" CanUserResizeRows="False" Grid.Column="1" Width="auto" Height="auto" ItemsSource="{Binding LUGesamtEntryCollection}"  AutoGenerateColumns="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn
-                                Header="Gesamt (Netto)" 
-                                Width="*" 
-                                Binding="{Binding StringFormat='{}{0:C}'}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
                     <Button Content="Excel exportieren" Command="{Binding ExportLUExcelCommand}" HorizontalAlignment="Right" Margin="0,10,10,0" Width="120" Grid.ColumnSpan="2" Height="20" VerticalAlignment="Top"/>
                     <Label Content="Gesamt Netto:"  FontWeight="Bold" HorizontalAlignment="Left" Margin="21,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="94"/>
                     <Label Content="Gesamt Brutto:" FontWeight="Bold" HorizontalAlignment="Left" Margin="21,36,0,0" Grid.Row="2" VerticalAlignment="Top" Width="94"/>
@@ -218,10 +217,10 @@
                                 Header="Rechnungsnummer" 
                                 Width="120*"
                                 Binding="{Binding RechnNr, UpdateSourceTrigger=PropertyChanged}"/>
-                            <DataGridTextColumn 
+                            <DataGridComboBoxColumn 
                                 Header="Autotyp" 
                                 Width="80*"
-                                Binding="{Binding Autotyp, UpdateSourceTrigger=PropertyChanged}"/>
+                                SelectedItemBinding ="{Binding Autotyp, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
                                 Header="Beladeort" 
                                 Width="120*"
@@ -295,17 +294,17 @@
                                 Width="120*"
                                 Binding="{Binding Kilometer, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
-                                Header="Autotyp1" 
+                                Header="Caddy" 
                                 Width="50*"
-                                Binding="{Binding AutoTyp1, UpdateSourceTrigger=PropertyChanged}"/>
+                                Binding="{Binding Caddy, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
-                                Header="Autotyp2" 
+                                Header="PKW" 
                                 Width="50*"
-                                Binding="{Binding AutoTyp2, UpdateSourceTrigger=PropertyChanged}"/>
+                                Binding="{Binding PKW, UpdateSourceTrigger=PropertyChanged}"/>
                             <DataGridTextColumn 
-                                Header="Autotyp3" 
+                                Header="Bus" 
                                 Width="50*"
-                                Binding="{Binding AutoTyp3, UpdateSourceTrigger=PropertyChanged}"/>
+                                Binding="{Binding Bus, UpdateSourceTrigger=PropertyChanged}"/>
                            
                         </DataGrid.Columns>
                     </DataGrid>
@@ -321,7 +320,7 @@
 
         <ComboBox HorizontalAlignment="Left" ItemsSource="{Binding MonthComboSource}" Margin="10,10,0,0" SelectedItem="{Binding SelectedMonth}" VerticalAlignment="Top" Width="120"/>
         <Button Content="Speichern" Command="{Binding SaveCollectionsCommand}" HorizontalAlignment="Right" Margin="0,10,10,5" Height="30" Width="120" FontWeight="Bold"/>
-        <ComboBox Margin="147,10,0,0" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120"/>
+        <ComboBox Margin="147,10,0,0" ItemsSource="{Binding YearsComboSource}" SelectedItem="{Binding SelectedYear}" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120"/>
 
     </Grid>
 

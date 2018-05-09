@@ -13,16 +13,16 @@ namespace TourenVerwaltung
         {
             Tour = tour;
             Kilometer = 0;
-            AutoTyp1 = 0;
-            AutoTyp2 = 0;
-            AutoTyp3 = 0;           
+            Caddy = 0;
+            PKW = 0;
+            Bus = 0;           
         }
 
         public string Tour { get; set; }
         public double Kilometer { get; set; }
-        public double AutoTyp1 { get; set; }
-        public double AutoTyp2 { get; set; }
-        public double AutoTyp3 { get; set; }
+        public double Caddy { get; set; }
+        public double PKW { get; set; }
+        public double Bus { get; set; }
 
     }
 }

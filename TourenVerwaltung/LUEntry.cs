@@ -27,7 +27,7 @@ namespace TourenVerwaltung
             }
         }
 
-        public string Autotyp { get; set; }
+        public Autotyp Autotyp { get; set; }
         public string Fahrer { get; set; }
 
 
@@ -56,7 +56,7 @@ namespace TourenVerwaltung
         public double Preis_Netto { get; set; }
         public double WarteZeit { get; set; }
         public double BeEntladezeit { get; set; }
-        public string Rückfracht { get; set; }
+        public double Rückfracht { get; set; }
         public double Maut { get; set; }
         public double GesamtNetto { get; set; }
 

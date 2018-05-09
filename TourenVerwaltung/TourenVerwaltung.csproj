@@ -126,6 +126,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Autotyp.cs" />
+    <Compile Include="EnumValuesExtension.cs" />
     <Compile Include="TourPreis.cs" />
     <Page Include="AddFahrerWindow.xaml">
       <SubType>Designer</SubType>

@@ -48,14 +48,14 @@ namespace TourenVerwaltung
                 temp.Datum = Leistungsuebersicht.GetCellValueAsString("B" + i.ToString());
                 temp.RechnNr = Leistungsuebersicht.GetCellValueAsInt32("C" + i.ToString());
                 temp.Auftragsgeber = Leistungsuebersicht.GetCellValueAsString("D" + i.ToString());
-                temp.Autotyp = Leistungsuebersicht.GetCellValueAsString("E" + i.ToString());
+                temp.Autotyp = Constants.getAutotypOfString(Leistungsuebersicht.GetCellValueAsString("E" + i.ToString()));
                 temp.Fahrer = Leistungsuebersicht.GetCellValueAsString("F" + i.ToString());
                 temp.Beladeort = Leistungsuebersicht.GetCellValueAsString("G" + i.ToString());
                 temp.Entladeort = Leistungsuebersicht.GetCellValueAsString("H" + i.ToString());
                 temp.Preis_Netto = Leistungsuebersicht.GetCellValueAsDouble("I" + i.ToString());
                 temp.WarteZeit = Leistungsuebersicht.GetCellValueAsDouble("J" + i.ToString());
                 temp.BeEntladezeit = Leistungsuebersicht.GetCellValueAsDouble("K" + i.ToString());
-                temp.Rückfracht = Leistungsuebersicht.GetCellValueAsString("L" + i.ToString());
+                temp.Rückfracht = Leistungsuebersicht.GetCellValueAsDouble("L" + i.ToString());
                 temp.Maut = Leistungsuebersicht.GetCellValueAsDouble("M" + i.ToString());
                 temp.GesamtNetto = Leistungsuebersicht.GetCellValueAsDouble("N" + i.ToString());
 
@@ -191,9 +191,9 @@ namespace TourenVerwaltung
                     tempHashMap.Add(key, new List<TourPreis>());
                 TourPreis tempItem = new TourPreis(FirmenPreise.GetCellValueAsString("C" + i.ToString()));
                 tempItem.Kilometer = FirmenPreise.GetCellValueAsDouble("D" + i.ToString());
-                tempItem.AutoTyp1 = FirmenPreise.GetCellValueAsDouble("E" + i.ToString());
-                tempItem.AutoTyp2 = FirmenPreise.GetCellValueAsDouble("F" + i.ToString());
-                tempItem.AutoTyp3 = FirmenPreise.GetCellValueAsDouble("G" + i.ToString());
+                tempItem.Caddy = FirmenPreise.GetCellValueAsDouble("E" + i.ToString());
+                tempItem.PKW = FirmenPreise.GetCellValueAsDouble("F" + i.ToString());
+                tempItem.Bus = FirmenPreise.GetCellValueAsDouble("G" + i.ToString());
 
                 tempHashMap[key].Add(tempItem);
             }
@@ -248,9 +248,8 @@ namespace TourenVerwaltung
                         Leistungsuebersicht.SetCellValue("B" + i.ToString(), collection.ElementAt(x).Datum.ToString());
                     Leistungsuebersicht.SetCellValue("C" + i.ToString(), collection.ElementAt(x).RechnNr);
                     if (collection.ElementAt(x).Auftragsgeber != null)
-                        Leistungsuebersicht.SetCellValue("D" + i.ToString(), collection.ElementAt(x).Auftragsgeber.ToString());
-                    if (collection.ElementAt(x).Autotyp != null)
-                        Leistungsuebersicht.SetCellValue("E" + i.ToString(), collection.ElementAt(x).Autotyp.ToString());
+                        Leistungsuebersicht.SetCellValue("D" + i.ToString(), collection.ElementAt(x).Auftragsgeber.ToString());                    
+                    Leistungsuebersicht.SetCellValue("E" + i.ToString(), Constants.getStringOfAutotyp(collection.ElementAt(x).Autotyp));
                     if (collection.ElementAt(x).Fahrer != null)
                         Leistungsuebersicht.SetCellValue("F" + i.ToString(), collection.ElementAt(x).Fahrer.ToString());
                     if (collection.ElementAt(x).Beladeort != null)
@@ -259,9 +258,8 @@ namespace TourenVerwaltung
                         Leistungsuebersicht.SetCellValue("H" + i.ToString(), collection.ElementAt(x).Entladeort.ToString());
                     Leistungsuebersicht.SetCellValue("I" + i.ToString(), collection.ElementAt(x).Preis_Netto);
                     Leistungsuebersicht.SetCellValue("J" + i.ToString(), collection.ElementAt(x).WarteZeit);
-                    Leistungsuebersicht.SetCellValue("K" + i.ToString(), collection.ElementAt(x).BeEntladezeit);
-                    if (collection.ElementAt(x).Rückfracht != null)
-                        Leistungsuebersicht.SetCellValue("L" + i.ToString(), collection.ElementAt(x).Rückfracht.ToString());
+                    Leistungsuebersicht.SetCellValue("K" + i.ToString(), collection.ElementAt(x).BeEntladezeit);                    
+                    Leistungsuebersicht.SetCellValue("L" + i.ToString(), collection.ElementAt(x).Rückfracht);
                     Leistungsuebersicht.SetCellValue("M" + i.ToString(), collection.ElementAt(x).Maut);
                     Leistungsuebersicht.SetCellValue("N" + i.ToString(), collection.ElementAt(x).GesamtNetto);
 
@@ -401,9 +399,9 @@ namespace TourenVerwaltung
                     FirmenPreise.SetCellValue("B" + i.ToString(), item);
                     FirmenPreise.SetCellValue("C" + i.ToString(), tp.Tour);
                     FirmenPreise.SetCellValue("D" + i.ToString(), tp.Kilometer);
-                    FirmenPreise.SetCellValue("E" + i.ToString(), tp.AutoTyp1);
-                    FirmenPreise.SetCellValue("F" + i.ToString(), tp.AutoTyp2);
-                    FirmenPreise.SetCellValue("G" + i.ToString(), tp.AutoTyp3);
+                    FirmenPreise.SetCellValue("E" + i.ToString(), tp.Caddy);
+                    FirmenPreise.SetCellValue("F" + i.ToString(), tp.PKW);
+                    FirmenPreise.SetCellValue("G" + i.ToString(), tp.Bus);
                     i++;
                 }
             }
