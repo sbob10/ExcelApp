@@ -7,13 +7,13 @@
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         mc:Ignorable="d"
-        Title="Touren Verwaltung" Height="500" Width="1080">
+        Title="Touren Verwaltung" Height="545.317" Width="1157.039">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:MessageBoxService />
     </dxmvvm:Interaction.Behaviors>
-    
- 
+
+
     <Window.DataContext>
         <local:MainViewModel />
     </Window.DataContext>
@@ -137,13 +137,16 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Button Content="Excel exportieren" Command="{Binding ExportLUExcelCommand}" HorizontalAlignment="Right" Margin="0,10,10,0" Width="120" Grid.ColumnSpan="2" Height="20" VerticalAlignment="Top"/>
+                    <Button Content="Leistungsübersicht exportieren" Command="{Binding ExportLUExcelCommand}" HorizontalAlignment="Right" Margin="0,10,10,0" Width="193" Grid.ColumnSpan="2" Height="20" VerticalAlignment="Top"/>
                     <Label Content="Gesamt Netto:"  FontWeight="Bold" HorizontalAlignment="Left" Margin="21,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="94"/>
                     <Label Content="Gesamt Brutto:" FontWeight="Bold" HorizontalAlignment="Left" Margin="21,36,0,0" Grid.Row="2" VerticalAlignment="Top" Width="94"/>
                     <TextBlock HorizontalAlignment="Left"  Margin="125,15,0,0" Grid.Row="2" Text="{Binding GesamtNettoValue, StringFormat='{}{0:C}'}" VerticalAlignment="Top"/>
                     <TextBlock HorizontalAlignment="Left" Margin="125,41,0,0" Grid.Row="2" Text="{Binding GesamtBruttoValue, StringFormat='{}{0:C}'}" VerticalAlignment="Top"/>
                     <Button Content="Eintrag hinzufügen" Command="{Binding AddEmptyLUValueCommand}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120"/>
                     <Button Content="Synchronisieren" HorizontalAlignment="Left" Margin="150,10,0,0" Command="{Binding SyncFirmenPreiseIntoLUEntriesCommand}" VerticalAlignment="Top" Width="120"/>
+
+                    <DataGrid x:Name ="FahrerStundenGrid" Margin="0,10,10,0" Grid.Row="1" Grid.Column="1"/>
+                    <DataGrid x:Name="FahrerStundenGridGesamt" Margin="346,10,24,15" Grid.Row="2"/>
 
                 </Grid>
             </TabItem>
@@ -194,7 +197,7 @@
                     <Button Content="Fahrer hinzufügen" Command="{Binding AddFahrerCommand}" HorizontalAlignment="Left" Margin="210,10,0,0" VerticalAlignment="Top" Width="120"/>
                     <Button Content="Fahrer bearbeiten" Command="{Binding EditFahrerCommand}" HorizontalAlignment="Left" Margin="350,10,0,0" VerticalAlignment="Top" Width="120"/>
                     <Button Content="Fahrer löschen" Command="{Binding DeleteFahrerCommand}" HorizontalAlignment="Left" Margin="490,10,0,0" VerticalAlignment="Top" Width="120"/>
-                    <Button Content="Excel Exportieren" Command="{Binding ExportFahrerExcelCommand}" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Arbeitszeitnachweis exportieren" Command="{Binding ExportFahrerExcelCommand}" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="195"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Firmen">
@@ -266,10 +269,12 @@
 
                     <Label Content="Firmen:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="48"/>
                     <ComboBox HorizontalAlignment="Left" Margin="63,10,0,0" ItemsSource="{Binding FirmenCollection}" SelectedItem="{Binding SelectedFirma}" VerticalAlignment="Top" Width="120"/>
-                    <Button Content="Firma hinzufügen" Command="{Binding AddFirmaCommand}" HorizontalAlignment="Left" Margin="210,10,0,0" VerticalAlignment="Top" Width="120"/>
-                    <Button Content="Firma bearbeiten" Command="{Binding EditFirmaCommand}" HorizontalAlignment="Left" Margin="350,10,0,0" VerticalAlignment="Top" Width="120"/>
-                    <Button Content="Firma löschen" Command="{Binding DeleteFirmaCommand}" HorizontalAlignment="Left" Margin="490,10,0,0" VerticalAlignment="Top" Width="120"/>
-                    <Button Content="Excel Exportieren" Command="{Binding ExportFirmaExcelCommand}" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Firma hinzufügen" Command="{Binding AddFirmaCommand}" HorizontalAlignment="Left" Margin="411,10,0,0" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Firma bearbeiten" Command="{Binding EditFirmaCommand}" HorizontalAlignment="Left" Margin="551,10,0,0" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Firma löschen" Command="{Binding DeleteFirmaCommand}" HorizontalAlignment="Left" Margin="691,10,0,0" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Rechnung exportieren" Command="{Binding ExportFirmaExcelCommand}" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="186"/>
+                    <ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="270,10,0,0"/>
+                    <Label Content="RechNr.:" HorizontalAlignment="Left" Margin="201,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.055,-0.248" Width="53"/>
 
                 </Grid>
             </TabItem>
@@ -305,13 +310,13 @@
                                 Header="Bus" 
                                 Width="50*"
                                 Binding="{Binding Bus, UpdateSourceTrigger=PropertyChanged}"/>
-                           
+
                         </DataGrid.Columns>
                     </DataGrid>
 
                     <Label Content="Firmen:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="48"/>
                     <ComboBox HorizontalAlignment="Left" Margin="63,10,0,0" ItemsSource="{Binding FirmenCollection}" SelectedItem="{Binding SelectedFirmeFirmenPreis}" VerticalAlignment="Top" Width="120"/>
-                    <Button Content="Excel Exportieren" Command="{Binding ExportFirmenPreiseExcelCommand}" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Firmenpreistabelle exportieren" Command="{Binding ExportFirmenPreiseExcelCommand}" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="198"/>
                     <Button Content="Synchronisieren" HorizontalAlignment="Left" Margin="203,10,0,0" VerticalAlignment="Top" Command="{Binding SyncLUEntriesIntoFirmenPreiseCommand}" Width="120" Height="22"/>
 
                 </Grid>

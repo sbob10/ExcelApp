@@ -23,6 +23,7 @@ namespace TourenVerwaltung
 
     {
         MainViewModel vm;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,6 +37,9 @@ namespace TourenVerwaltung
 
             vm.ShowEditFahrerDialogFunc = new Func<Fahrer, string>(ShowEditFahrerDialogFunc);
             vm.ShowEditFirmaDialogFunc = new Func<Firma, string>(ShowEditFirmaDialogFunc);
+
+            vm.SyncFahrerStundenGridColumns = new Func<List<Fahrer>, string>(SyncFahrerStundenGridColumns);
+            vm.SyncFahrerStundenGridEntries = new Func<string, double, string>(SyncFahrerStundenGridEntries);
 
         }
 
@@ -105,7 +109,38 @@ namespace TourenVerwaltung
             vm.EditFirmaFromCodeBehind(entry);
         }
 
-     
+        private string SyncFahrerStundenGridColumns(List<Fahrer> fahrer)
+        {
+            foreach (var column in FahrerStundenGrid.Columns)
+            {
+                FahrerStundenGrid.Columns.Remove(column);
+            }
+
+            foreach (var Fahrer in fahrer)
+            {
+                
+
+            }
+
+
+            return "";
+        }
+
+        private string SyncFahrerStundenGridEntries(string fahrerName, double stunden)
+        {
+
+            return "";
+        }
+
+        public void SyncFahrerStundenGesamtGridColumns(List<Fahrer> fahrer)
+        {
+
+        }
+
+        public void SyncFahrerStundenGesamtGridEntries()
+        {
+
+        }
 
     }
 

@@ -155,6 +155,9 @@ namespace TourenVerwaltung
         public Func<int, int, string> ShowAddFirmaDialogFunc { get; set; }
         public Func<Firma, string> ShowEditFirmaDialogFunc { get; set; }
 
+        public Func<List<Fahrer>, string> SyncFahrerStundenGridColumns { get; set; }
+        public Func<string, double, string> SyncFahrerStundenGridEntries { get; set; }
+
         public ICommand SaveCollectionsCommand { get; set; }
 
         public ICommand ExportLUExcelCommand { get; set; }
