@@ -20,7 +20,7 @@
 
     <Grid>
 
-        <Label Content="Fahrer bearbeiten:" HorizontalAlignment="Right" Margin="0,0,608,468" VerticalAlignment="Bottom" Width="132"/>
+        <Label Content="Fahrer bearbeiten:" HorizontalAlignment="Right" Margin="0,0,442,306" VerticalAlignment="Bottom" Width="132"/>
         <Label Content="Name:" HorizontalAlignment="Left" Margin="20,60,0,0" VerticalAlignment="Top"/>
         <Label Content="Angestellt seit:" HorizontalAlignment="Left" Margin="20,120,0,0" VerticalAlignment="Top"/>
         <Label Content="Angestellt bis:" HorizontalAlignment="Left" Margin="20,180,0,0" VerticalAlignment="Top"/>
@@ -30,15 +30,15 @@
         <Label Content="Überstunden Vormonate:" HorizontalAlignment="Left" Margin="269,180,0,0" VerticalAlignment="Top"/>
         <Label Content="Überstunden Differenz:" HorizontalAlignment="Left" Margin="269,240,0,0" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left"  Height="23" Margin="125,64,0,0" TextWrapping="Wrap" Text="{Binding EditFahrerValue.NameVorname}" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="125,124,0,0" TextWrapping="Wrap" Text="{Binding EditFahrerValue.DatumSeit}"  VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="125,123,0,0" TextWrapping="Wrap" Text="{Binding EditFahrerValue.DatumSeit}"  VerticalAlignment="Top" Width="120"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="125,183,0,0" TextWrapping="Wrap" Text="{Binding EditFahrerValue.DatumBis}"  VerticalAlignment="Top" Width="120"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="125,240,0,0" TextWrapping="Wrap" Text="{Binding EditFahrerValue.GebDatum}"  VerticalAlignment="Top" Width="120"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="423,64,0,0" TextWrapping="Wrap" Text="{Binding EditFahrerValue.StundenGesamt, StringFormat=N1}"  VerticalAlignment="Top" Width="120"/>
         <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding EditFahrerValue.StundenAbgerechnet, StringFormat=N1}"  VerticalAlignment="Top" Width="120" Margin="423,124,0,0"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="423,183,0,0" TextWrapping="Wrap" Text="{Binding EditFahrerValue.ÜberstundenVormonate, StringFormat=N1}"  VerticalAlignment="Top" Width="120"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="423,240,0,0" TextWrapping="Wrap" Text="{Binding EditFahrerValue.ÜberstundenDifferenz, StringFormat=N1}"  VerticalAlignment="Top" Width="120"/>
-        <Button Content="Ändern" Command="{Binding EditFahrerCommand}" Margin="0,0,51,26" Width="100" HorizontalAlignment="Right" Height="20" VerticalAlignment="Bottom"/>
-        <Button Content="Abbrechen" Command="{Binding CloseDialogEditFahrerCommand}" Margin="0,0,182,26" HorizontalAlignment="Right" Width="100" Height="20" VerticalAlignment="Bottom"/>
+        <Button Content="Ändern" Command="{Binding EditFahrerCommand}" Margin="0,0,51,10" Width="120" HorizontalAlignment="Right" Height="36" VerticalAlignment="Bottom"/>
+        <Button Content="Abbrechen" Command="{Binding CloseDialogEditFahrerCommand}" Margin="0,0,205,10" HorizontalAlignment="Right" Width="120" Height="36" VerticalAlignment="Bottom"/>
 
 
     </Grid>

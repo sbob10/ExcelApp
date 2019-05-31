@@ -105,8 +105,5 @@ namespace TourenVerwaltung
         }
 
         #endregion Command Methods
-
-
-
     }
 }

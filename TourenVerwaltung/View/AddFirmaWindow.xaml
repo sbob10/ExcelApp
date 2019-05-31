@@ -7,7 +7,7 @@
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         mc:Ignorable="d"
-        Title="Firma hinzufügen" Height="380" Width="600">
+        Title="Firma hinzufügen" Height="380" Width="541.693">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:MessageBoxService />
@@ -19,7 +19,7 @@
 
     <Grid >
 
-        <Label Content="Firma hinzufügen:" HorizontalAlignment="Right" Margin="0,0,440,313" VerticalAlignment="Bottom" Width="132"/>
+        <Label Content="Firma hinzufügen:" HorizontalAlignment="Left" Margin="18,0,0,313" VerticalAlignment="Bottom" Width="132"/>
         <Label Content="Name:" HorizontalAlignment="Left" Margin="20,60,0,0" VerticalAlignment="Top"/>
         <Label Content="Ansprechpartner:" HorizontalAlignment="Left" Margin="20,120,0,0" VerticalAlignment="Top"/>
         <Label Content="Straße/Nr.:" HorizontalAlignment="Left" Margin="20,180,0,0" VerticalAlignment="Top"/>
@@ -33,11 +33,11 @@
         <TextBox HorizontalAlignment="Left" Height="23" Margin="135,240,0,0" TextWrapping="Wrap" Text="{Binding AddFirmaValue.PLZ}"  VerticalAlignment="Top" Width="120"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="378,64,0,0" TextWrapping="Wrap" Text="{Binding AddFirmaValue.Ort}"  VerticalAlignment="Top" Width="120"/>
         <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding AddFirmaValue.Land}"  VerticalAlignment="Top" Width="120" Margin="378,123,0,0"/>
-        <Button Content="Hinzufügen" Command="{Binding AddFirmaCommand}" Margin="0,0,43,22" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="100" Grid.RowSpan="2" />
-        <Button Content="Abbrechen" Command="{Binding CloseDialogAddFirmaCommand}" Margin="0,0,180,22" Height="22" VerticalAlignment="Bottom" Grid.RowSpan="2" HorizontalAlignment="Right" Width="100"/>
+        <Button Content="Hinzufügen" Command="{Binding AddFirmaCommand}" Margin="378,0,0,22" Height="34" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="120" />
+        <Button Content="Abbrechen" Command="{Binding CloseDialogAddFirmaCommand}" Margin="222,0,0,22" Height="34" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="120"/>
         <Label Content="Anfangsrechnungsnummer:" HorizontalAlignment="Left" Margin="304,180,0,0" VerticalAlignment="Top"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="378,211,0,0" TextWrapping="Wrap" Text="{Binding AddFirmaValue.CurrentRechnungsNr}" VerticalAlignment="Top" Width="120"/>
-        
+
 
     </Grid>
 </Window>

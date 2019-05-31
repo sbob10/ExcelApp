@@ -15,8 +15,6 @@ namespace TourenVerwaltung
     public class MainViewModel : ViewModelBase
     {
 
-        #region Properties
-
         private Fahrer _SelectedFahrer;
 
         public Fahrer SelectedFahrer
@@ -46,7 +44,7 @@ namespace TourenVerwaltung
         public ObservableCollection<LUEntry> LUCollection
         {
             get { return _LUCollection; }
-            set { SetProperty(ref _LUCollection, value, () => LUCollection);}
+            set { SetProperty(ref _LUCollection, value, () => LUCollection); CalculateNettoAndBruttoSums(); }
         }
 
         private ObservableCollection<Fahrer> _FahrerCollection;
@@ -137,17 +135,10 @@ namespace TourenVerwaltung
             set { SetProperty(ref _YearsComboSource, value, () => YearsComboSource); }
         }
 
-        #endregion Properties
-
-        #region Data
-
         private ExcelManager _manager;
 
         private Dictionary<String, List<TourPreis>> _FirmenPreiseHashMap;
 
-        #endregion Data
-
-        #region Commands&Services
 
         public Func<int, int, string> ShowAddFahrerDialogFunc { get; set; }
         public Func<Fahrer, string> ShowEditFahrerDialogFunc { get; set; }
@@ -181,9 +172,6 @@ namespace TourenVerwaltung
         public IMessageBoxService MessageBoxService { get { return ServiceContainer.GetService<IMessageBoxService>(); } set { } }
         public IServiceContainer IServiceContainer { get; set; }
 
-        #endregion Commands&Services
-
-        #region Initialisations
 
         public MainViewModel()
         {
@@ -237,10 +225,6 @@ namespace TourenVerwaltung
             //LoadLUEntriesForAllFirmenPreise();
             //LoadFirmenPreisForAllLUEntries();
         }
-
-        #endregion Initialisations
-
-        #region Public Methods
 
         public void LoadAllCollections()
         {
@@ -343,12 +327,7 @@ namespace TourenVerwaltung
             return returnValue;
         }*/
 
-        #endregion Public Methods
-
-        #region Private Methods    
-
         // Load-And-Store-Methods
-
         private void LoadFahrerLUEntries()
         {
             if (SelectedFahrer == null)
@@ -427,6 +406,8 @@ namespace TourenVerwaltung
             LUEntry newValue = new LUEntry();
             newValue.OnAuftragsgeberChanged = new Func<string, LUEntry, string>(LoadRechnungsnummerForLUEntry);
             LUCollection.Add(newValue);
+
+            SyncHashMapWithFirmenCollection();
         }
 
         private void LoadTourPreisCollection()
@@ -434,7 +415,7 @@ namespace TourenVerwaltung
             if(SelectedFirmeFirmenPreis != null && _FirmenPreiseHashMap.Keys.Contains(SelectedFirmeFirmenPreis.Name))
                 CurrentTourPreisCollection = new ObservableCollection<TourPreis>(_FirmenPreiseHashMap[SelectedFirmeFirmenPreis.Name]);
         }
-
+        
         private void SyncHashMapWithFirmenCollection()
         {
             foreach(Firma item in FirmenCollection.ToList())
@@ -539,13 +520,7 @@ namespace TourenVerwaltung
             LUCollection = new ObservableCollection<LUEntry>(tempList);
         }
 
-
-        #endregion Private Methods
-
-        #region Command Methods
-
         // CRUD-Commands
-
         private void SaveCollections()
         {
             StoreAllCollections();
@@ -587,7 +562,6 @@ namespace TourenVerwaltung
         }
 
         // Sync-Commands
-
         private void SyncFirmenPreiseIntoLUEntries()
         {
             LoadLUEntriesForAllFirmenPreise();
@@ -600,7 +574,6 @@ namespace TourenVerwaltung
 
 
         // Export-Commands
-
         private void ExportLUExcel()
         {
             _manager.StoreCollectionLU(LUCollection.ToList(), SelectedMonth);
@@ -625,7 +598,7 @@ namespace TourenVerwaltung
             }
         }
 
-       private void ExportFirmenPreiseExcel()
+        private void ExportFirmenPreiseExcel()
         {
             //TBD!!!!
             StoreAllCollections();
@@ -633,6 +606,20 @@ namespace TourenVerwaltung
             {
 
             }
+        }
+
+        //MISC
+
+        private void CalculateNettoAndBruttoSums()
+        {
+            double sum = 0.0;
+            foreach (var luEntry in LUCollection)
+            {
+                sum += luEntry.GesamtNetto;
+            }
+
+            GesamtNettoValue = sum;
+            GesamtBruttoValue = sum * 1.19;
         }
 
         // Events
@@ -648,8 +635,6 @@ namespace TourenVerwaltung
             LoadFahrerLUEntries();
             LoadFirmaLUEntries();
         }
-
-        #endregion Command Methods
 
     }
 }

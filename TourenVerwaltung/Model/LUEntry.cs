@@ -12,7 +12,7 @@ namespace TourenVerwaltung
 
         public int ID { get; set; }
         public string Datum { get; set; }
-        public int RechnNr { get; set; }
+        public double RechnNr { get; set; }
 
         private String _Auftragsgeber;
 
