@@ -15,6 +15,14 @@ namespace TourenVerwaltung
     public class MainViewModel : ViewModelBase
     {
 
+        private int _SelectedTab;
+
+        public int SelectedTab
+        {
+            get { return _SelectedTab; }
+            set { SetProperty(ref _SelectedTab, value, () => SelectedTab); OnTabIndexChanged(value); }
+        }
+
         private Fahrer _SelectedFahrer;
 
         public Fahrer SelectedFahrer
@@ -68,7 +76,15 @@ namespace TourenVerwaltung
         public ObservableCollection<Firma> FirmenCollection
         {
             get { return _FirmenCollection; }
-            set { SetProperty(ref _FirmenCollection, value, () => FirmenCollection); }
+            set { SetProperty(ref _FirmenCollection, value, () => FirmenCollection); FillRechNrCombo(); }
+        }
+
+        private ObservableCollection<String> _FirmenRechNrCollection;
+
+        public ObservableCollection<String> FirmenRechNrCollection
+        {
+            get { return _FirmenRechNrCollection; }
+            set { SetProperty(ref _FirmenRechNrCollection, value, () => FirmenRechNrCollection);}
         }
 
         private ObservableCollection<LUEntry> _FirmenTabLUEntries;
@@ -217,6 +233,7 @@ namespace TourenVerwaltung
             LUCollection = new ObservableCollection<LUEntry>(new List<LUEntry>());
             LUCollection.CollectionChanged += OnGridLUEdited;
             FirmenCollection = new ObservableCollection<Firma>(new List<Firma>());
+            FirmenRechNrCollection = new ObservableCollection<string>(new List<string>());
             FahrerCollection = new ObservableCollection<Fahrer>(new List<Fahrer>());
 
             CurrentTourPreisCollection = new ObservableCollection<TourPreis>(new List<TourPreis>());
@@ -622,6 +639,19 @@ namespace TourenVerwaltung
             GesamtBruttoValue = sum * 1.19;
         }
 
+        private void FillRechNrCombo()
+        {
+            //TBD: always showing the current one
+            var allPossibleRechNr = FirmenCollection.GroupBy(fc => fc.CurrentRechnungsNr);
+            var tempRechNrCollection = new List<string>();
+            foreach (var rechnr in allPossibleRechNr.ToList())
+            {
+                tempRechNrCollection.Add(rechnr.First().CurrentRechnungsNr.ToString());
+            }
+
+            FirmenRechNrCollection = new ObservableCollection<string>(tempRechNrCollection);
+        }
+
         // Events
 
         public void OnGridLUEdited(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -636,5 +666,13 @@ namespace TourenVerwaltung
             LoadFirmaLUEntries();
         }
 
+        public void OnTabIndexChanged(int newIndex)
+        {
+            if(newIndex == 2)
+            {
+                LoadFirmaLUEntries();
+                FillRechNrCombo();
+            }
+        }
     }
 }

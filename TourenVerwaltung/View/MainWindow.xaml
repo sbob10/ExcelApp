@@ -80,7 +80,7 @@
                 BorderThickness="2,2,2,2" Margin="2,2,2,2" Background="Linen" />
 
 
-        <dragablz:TabablzControl Margin="10" Grid.Row="1" Background="Linen">
+        <dragablz:TabablzControl Margin="10" Grid.Row="1" SelectedIndex="{Binding SelectedTab}" Background="Linen">
             <TabItem Header="Leistungsübersicht">
                 <Grid Background="Linen">
                     <Grid.RowDefinitions>
@@ -333,7 +333,7 @@
                     <Button Content="Firma bearbeiten" Command="{Binding EditFirmaCommand}" HorizontalAlignment="Left" Margin="574,16,0,0" VerticalAlignment="Top" Width="150" Grid.Column="1" Height="34"/>
                     <Button Content="Firma löschen" Command="{Binding DeleteFirmaCommand}" HorizontalAlignment="Left" Margin="750,16,0,0" VerticalAlignment="Top" Width="150" Grid.Column="1" Height="34"/>
                     <Button Content="Rechnung exportieren" Command="{Binding ExportFirmaExcelCommand}" HorizontalAlignment="Right" Margin="0,15,10,0" VerticalAlignment="Top" Width="186" Height="35" Grid.Column="1"/>
-                    <ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="238,20,0,0" Grid.Column="1"/>
+                    <ComboBox HorizontalAlignment="Left" ItemsSource="{Binding FirmenRechNrCollection}" VerticalAlignment="Top" Width="120" Margin="238,20,0,0" Grid.Column="1"/>
                     <Label Content="RechNr.:" HorizontalAlignment="Left" Margin="157,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.055,-0.248" Width="76" Grid.Column="1" Height="34"/>
 
                 </Grid>
