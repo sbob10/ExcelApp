@@ -17,6 +17,8 @@ namespace TourenVerwaltung
                 Bus = 0;
             }
 
+            public string FirmenName { get; set; }
+
             public string Tour { get; set; }
             public double Kilometer { get; set; }
             public double Caddy { get; set; }
